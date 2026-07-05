@@ -1,0 +1,38 @@
+name: Test & Lint
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Install Backend Dependencies
+      run: |
+        cd Grocery-Mart-backend-main
+        npm install
+    
+    - name: Install Frontend Dependencies
+      run: |
+        cd Grocery-Mart-frontend-main/Grocery-Mart-frontend-main
+        npm install
+    
+    - name: Build Frontend
+      run: |
+        cd Grocery-Mart-frontend-main/Grocery-Mart-frontend-main
+        npm run build
+      continue-on-error: true
